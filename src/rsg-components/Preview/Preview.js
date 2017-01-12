@@ -14,7 +14,7 @@ const IMPORT_REGEX = /(import )(.+)( from )(["'`].+["'`])/g;
 const TRANSPILED_CONST_DESTRUCTURE_REGEX = /(\w+) as (\w+)/g;
 const TRANSPILED_CONST_DESTRUCTURE_REPLACEMENT = '$1: $2';
 const JSX_REGEX = /(<(.|\s)+>)/m;
-const REACT_ELEMENT_REGEX = /(React.createElement\(.+\))/;
+const REACT_ELEMENT_REGEX = /(\(React.createElement\((.|\s)+\)\))/;
 
 /*
  * Convert `import {foo as bar} from 'something'` to `const { foo: bar } = require('something')`
@@ -30,7 +30,7 @@ const dumbImportTranspiler = code => code
  * Enclose JSX/React.createElement in a div
  */
 const encloseJSX = code => code
-	.replace(JSX_REGEX, '<div>$1</div>');
+	.replace(JSX_REGEX, '(<div>\n$1\n</div>)');
 
 /*
  * Make sure React.createElement is returned from enclosing function
