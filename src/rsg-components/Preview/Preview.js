@@ -75,15 +75,21 @@ export default class Preview extends Component {
 		}
 
 		try {
-			const compiledCode = `(function() { ${
-				returnReactElement(
-					compileCode(
-						encloseJSX(
-							dumbImportTranspiler(this.props.code)
+			let compiledCode
+
+			if (this.props.code.includes('return (')) {
+				compiledCode = compileCode(`(function() { ${dumbImportTranspiler(this.props.code)} })();`);
+			} else {
+				compiledCode = `(function() { ${
+					returnReactElement(
+						compileCode(
+							encloseJSX(
+								dumbImportTranspiler(this.props.code)
+							)
 						)
 					)
-				)
-			} })();`;
+				} })();`;
+			}
 
 			// Initiate state and set with the callback in the bottom component;
 			// Workaround for https://github.com/styleguidist/react-styleguidist/issues/155 - missed props on first render
